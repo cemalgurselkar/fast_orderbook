@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fast-orderbook"
+version = "0.1.0"
+description = "A performance-oriented real-time market data ingestion and analytics engine."
+requires-python = ">=3.11"
+
+dependencies = [
+    "websockets",
+    "orjson",
+    "pyarrow",
+    "duckdb",
+    "pydantic",
+    "pydantic-settings",
+    "prometheus-client",
+    "pytz",
+    "confluent-kafka",
+    "pyspark",
+    "psycopg[binary]"
+]
+
+[project.optional-dependencies]
+performance = [
+    "uvloop",
+]
+
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

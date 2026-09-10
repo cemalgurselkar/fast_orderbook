@@ -1,0 +1,20 @@
+{
+  "target_rate": 50000,
+  "duration_seconds": 15.0,
+  "produced": 749996,
+  "received": 0,
+  "written": 0,
+  "producer_rate": 49999.73333333333,
+  "throughput": 0.0,
+  "delivery_failed": 0,
+  "producer_queue_full": 0,
+  "max_queue_depth": 0,
+  "latency_samples": 0,
+  "p50_ms": 0.0,
+  "p95_ms": 0.0,
+  "p99_ms": 0.0,
+  "cpu_percent": 36.30284631118859,
+  "max_rss_mb": 73.1484375,
+  "wall_seconds": 15.003074285999901,
+  "output_path": "data/benchmark/50000_eps_1789055651"
+}

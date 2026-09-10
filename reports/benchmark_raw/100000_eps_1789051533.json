@@ -1,0 +1,20 @@
+{
+  "target_rate": 100000,
+  "duration_seconds": 15.0,
+  "produced": 1398365,
+  "received": 1282364,
+  "written": 1282364,
+  "producer_rate": 93224.33333333333,
+  "throughput": 12551.36037783062,
+  "delivery_failed": 0,
+  "producer_queue_full": 0,
+  "max_queue_depth": 1,
+  "latency_samples": 12825,
+  "p50_ms": 72622.684437,
+  "p95_ms": 84432.420564,
+  "p99_ms": 84920.251389,
+  "cpu_percent": 117.1936309127755,
+  "max_rss_mb": 694.41796875,
+  "wall_seconds": 102.16932359499697,
+  "output_path": "data/benchmark/100000_eps_1789051533"
+}
