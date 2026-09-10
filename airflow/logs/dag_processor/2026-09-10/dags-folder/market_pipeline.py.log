@@ -691,3 +691,7 @@
 {"timestamp":"2026-09-10T16:19:16.073822Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/market_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
 {"timestamp":"2026-09-10T16:19:46.473406Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/market_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
 {"timestamp":"2026-09-10T16:20:16.932667Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/market_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-09-10T16:20:47.443801Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/market_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-09-10T16:21:17.859718Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/market_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-09-10T16:21:48.349240Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/market_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-09-10T16:22:18.774545Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/market_pipeline.py","logger":"airflow.models.dagbag.DagBag","filename":"dagbag.py","lineno":593}
