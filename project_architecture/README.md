@@ -10,6 +10,7 @@ Bu klasör, MarketStream kodunun çalışma biçimini kısa ve kodla uyumlu biç
 4. [PySpark ve Silver katmanı](04_pyspark_silver.md)
 5. [Veri katmanları ve sunum](05_veri_katmanlari_ve_serving.md)
 6. [Optimizasyon yol haritası](06_optimizasyon_yol_haritasi.md)
+7. [Docker notları](DockerNote.md)
 
 ## Tek cümlede sistem
 
@@ -28,4 +29,3 @@ zincirini 15 dakikada bir çalıştırır.
 | Gold → PostgreSQL | `fast_orderbook.serving.postgres` |
 | REST ve WebSocket | `fast_orderbook.serving.api` |
 | Streamlit | `fast_orderbook.ui.ui` |
-
