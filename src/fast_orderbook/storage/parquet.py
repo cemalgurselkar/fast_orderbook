@@ -1,10 +1,9 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
 import pyarrow as pa
 import pyarrow.parquet as pq
-
 
 TOPIC_DATASETS = {
     "market.trades": "trades",
@@ -30,7 +29,7 @@ class BronzeParquetWriter:
         dataset = TOPIC_DATASETS[topic]
         symbol = events[0]["symbol"]
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         date = now.strftime("%Y-%m-%d")
 
         output_dir = (

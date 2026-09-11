@@ -1,3 +1,4 @@
+# Builds the Airflow image with MarketStream platform dependencies.
 FROM apache/airflow:3.1.0
 
 USER root
@@ -16,4 +17,4 @@ COPY --chown=airflow:root src /opt/fast-orderbook/src
 
 USER airflow
 
-RUN pip install --no-cache-dir /opt/fast-orderbook
+RUN pip install --no-cache-dir "/opt/fast-orderbook[platform]"

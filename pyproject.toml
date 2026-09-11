@@ -3,31 +3,52 @@ requires = ["setuptools>=80"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "fast-orderbook"
+name = "marketstream"
 version = "0.1.0"
-description = "A performance-oriented real-time market data ingestion and analytics engine."
+description = "A real-time market data Python SDK and data platform."
+readme = "README.md"
 requires-python = ">=3.11"
 
 dependencies = [
     "websockets",
     "orjson",
-    "pyarrow",
-    "duckdb",
-    "pydantic",
-    "pydantic-settings",
-    "prometheus-client",
-    "pytz",
-    "confluent-kafka",
-    "pyspark",
-    "psycopg[binary]"
 ]
 
+[project.scripts]
+marketstream = "marketstream.cli:main"
+
 [project.optional-dependencies]
+platform = [
+    "confluent-kafka",
+    "duckdb",
+    "pyarrow",
+    "pyspark",
+    "psycopg[binary]",
+]
+
 performance = [
     "uvloop",
 ]
 
+api = [
+    "confluent-kafka",
+    "fastapi",
+    "psycopg[binary]",
+    "uvicorn[standard]",
+]
+
+ui = [
+    "pandas",
+    "streamlit>=1.37",
+]
+
 dev = [
+    "confluent-kafka",
+    "duckdb",
+    "fastapi",
+    "pandas",
+    "psycopg[binary]",
+    "pyarrow",
     "pytest",
     "pytest-asyncio",
     "ruff",
@@ -35,6 +56,9 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+fast_orderbook = ["analytics/sql/*.sql"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

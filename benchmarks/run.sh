@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Runs the MarketStream benchmark with the configured 10K Parquet batch size.
 
 set -u
 
@@ -24,7 +25,7 @@ RATES=(
 mkdir -p "$REPORT_DIR"
 
 cat > "$REPORT" <<EOF
-# Fast-Orderbook Benchmark Report
+# MarketStream Benchmark Report
 
 Generated: $(date --iso-8601=seconds)
 
@@ -38,7 +39,7 @@ Generated: $(date --iso-8601=seconds)
 - Benchmark duration per workload: ${DURATION}s
 - Kafka partitions per benchmark topic: 8
 - Consumer queue capacity: 10,000
-- Parquet batch size: 1,000
+- Parquet batch size: 10,000
 - Parquet compression: ZSTD
 - Latency sampling: 1 / 100 events
 
@@ -50,7 +51,7 @@ EOF
 
 echo
 echo "============================================================"
-echo "FAST-ORDERBOOK BENCHMARK"
+echo "MARKETSTREAM BENCHMARK"
 echo "============================================================"
 echo
 echo "Duration per workload: ${DURATION}s"

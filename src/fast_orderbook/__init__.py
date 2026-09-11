@@ -1,4 +1,1 @@
-from src.fast_orderbook import *
-
-
-__all__ = ["models"]
+"""Contains the internal data-platform implementation used by MarketStream."""

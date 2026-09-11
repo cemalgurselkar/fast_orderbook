@@ -34,7 +34,7 @@ async def write_bronze(
                     queue.get(),
                     timeout=0.1,
                 )
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 kafka_batch = ...
 
             now = time.monotonic()

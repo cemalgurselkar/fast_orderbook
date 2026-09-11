@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from fast_orderbook.models import TradeEvent
+
 
 class ExchangeClient(ABC):
     @abstractmethod

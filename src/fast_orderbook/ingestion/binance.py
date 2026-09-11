@@ -1,5 +1,8 @@
+"""Provides configurable Binance streams while preserving the existing parsers."""
+
 import asyncio
 from collections.abc import AsyncIterator
+from typing import ClassVar
 
 import orjson
 import websockets
@@ -17,26 +20,41 @@ from fast_orderbook.models import (
 
 class BinanceClient:
     BASE_URL = "wss://stream.binance.com:9443/stream?streams="
+    STREAM_SUFFIXES: ClassVar[dict[str, str]] = {
+        "trade": "trade",
+        "depth": "depth@100ms",
+        "bookticker": "bookTicker",
+        "ticker": "ticker",
+        "kline": "kline_1m",
+    }
 
-    def __init__(self) -> None:
-        self.url = self._build_stream_url()
+    def __init__(
+        self,
+        symbols: tuple[str, ...] | None = None,
+        event_types: tuple[str, ...] | None = None,
+    ) -> None:
+        self.symbols = symbols or settings.symbols
+        self.event_types = event_types or settings.event_types
+        self.url = self._build_stream_url(self.symbols, self.event_types)
 
-    @staticmethod
-    def _build_stream_url() -> str:
+    @classmethod
+    def _build_stream_url(
+        cls,
+        symbols: tuple[str, ...],
+        event_types: tuple[str, ...],
+    ) -> str:
         streams: list[str] = []
 
-        for symbol in settings.symbols:
-            streams.extend(
-                (
-                    f"{symbol}@trade",
-                    f"{symbol}@depth@100ms",
-                    f"{symbol}@bookTicker",
-                    f"{symbol}@ticker",
-                    f"{symbol}@kline_1m",
-                )
-            )
+        for symbol in symbols:
+            for event_type in event_types:
+                key = event_type.lower().replace("_", "")
 
-        return BinanceClient.BASE_URL + "/".join(streams)
+                if key not in cls.STREAM_SUFFIXES:
+                    raise ValueError(f"Unsupported Binance event type: {event_type}")
+
+                streams.append(f"{symbol.lower()}@{cls.STREAM_SUFFIXES[key]}")
+
+        return cls.BASE_URL + "/".join(streams)
 
     async def stream(self) -> AsyncIterator[MarketEvent]:
         retry_delay = 1
@@ -49,7 +67,9 @@ class BinanceClient:
                     ping_timeout=20,
                     max_queue=1024,
                 ) as websocket:
-                    print("Connected to Binance: 50 logical streams")
+                    print(
+                        f"Connected to Binance: {len(self.symbols) * len(self.event_types)} streams"
+                    )
                     retry_delay = 1
 
                     async for raw_message in websocket:
@@ -68,10 +88,7 @@ class BinanceClient:
                 OSError,
                 TimeoutError,
             ) as error:
-                print(
-                    f"Binance connection lost: {error}. "
-                    f"Retrying in {retry_delay}s..."
-                )
+                print(f"Binance connection lost: {error}. Retrying in {retry_delay}s...")
 
                 await asyncio.sleep(retry_delay)
                 retry_delay = min(retry_delay * 2, 30)
@@ -102,14 +119,8 @@ class BinanceClient:
                 event_time_ms=data["E"],
                 first_update_id=data["U"],
                 final_update_id=data["u"],
-                bids=tuple(
-                    (float(price), float(quantity))
-                    for price, quantity in data["b"]
-                ),
-                asks=tuple(
-                    (float(price), float(quantity))
-                    for price, quantity in data["a"]
-                ),
+                bids=tuple((float(price), float(quantity)) for price, quantity in data["b"]),
+                asks=tuple((float(price), float(quantity)) for price, quantity in data["a"]),
             )
 
         if "@bookticker" in stream:
@@ -155,6 +166,4 @@ class BinanceClient:
                 is_closed=kline["x"],
             )
 
-        raise ValueError(
-            f"Unsupported Binance stream: {stream_name}"
-        )
+        raise ValueError(f"Unsupported Binance stream: {stream_name}")

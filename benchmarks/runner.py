@@ -1,3 +1,5 @@
+"""Runs the reproducible Kafka-to-Parquet performance benchmark."""
+
 import argparse
 import asyncio
 import json
@@ -18,11 +20,10 @@ from confluent_kafka.admin import (
 )
 
 from benchmarks.generator import (
-    SyntheticMarketGenerator,
     TOPICS,
+    SyntheticMarketGenerator,
 )
 from benchmarks.metrics import BenchmarkMetrics
-
 
 TOPIC_DATASETS = {
     "benchmark.trades": "trades",
@@ -249,7 +250,7 @@ async def consume_and_write(
                 buffer = buffers[key]
                 buffer.append(event)
 
-                if len(buffer) >= 10_000:
+                if len(buffer) >= batch_size:
                     written = writer.write(
                         topic,
                         event["symbol"],
@@ -293,111 +294,6 @@ async def consume_and_write(
 
     finally:
         consumer.close()
-
-async def reader(
-            consumer,
-            queue,
-            metrics,
-            producer_stopped,):
-    
-    idle_since = None
-
-    while True:
-        messages = await asyncio.to_thread(
-            consumer.consume,
-            5_000,
-            0.1,
-        )
-
-        if not messages:
-            if producer_stopped.is_set():
-                if idle_since is None:
-                    idle_since = time.monotonic()
-
-                elif time.monotonic() - idle_since >= 2.0:
-                    break
-
-            continue
-
-        idle_since = None
-
-        batch = []
-
-        now_ns = time.perf_counter_ns()
-
-        for message in messages:
-            if message.error():
-                raise RuntimeError(message.error())
-
-            headers = dict(message.headers() or [])
-
-            sent_ns_raw = headers.get("sent_ns")
-
-            if sent_ns_raw is not None:
-                sent_ns = struct.unpack("!Q", sent_ns_raw)[0]
-
-                latency_ms = (now_ns - sent_ns) / 1_000_000
-
-                metrics.latencies_ms.append(latency_ms)
-
-            batch.append(
-                (
-                    message.topic(),
-                    orjson.loads(message.value()),
-                )
-            )
-
-        metrics.received += len(batch)
-
-        await queue.put(batch)
-
-        metrics.max_queue_depth = max(
-            metrics.max_queue_depth,
-            queue.qsize(),
-        )
-
-async def disk_writer(
-    queue,
-    writer,
-    metrics,
-    ):
-    batches = defaultdict(list)
-
-    while True:
-        kafka_batch = await queue.get()
-
-        if kafka_batch is None:
-            queue.task_done()
-            break
-
-        for topic, event in kafka_batch:
-            key = (topic, event["symbol"])
-
-            buffer = batches[key]
-            buffer.append(event)
-
-            if len(buffer) >= 10_000:
-                writer.write(
-                    topic,
-                    buffer,
-                )
-
-                metrics.written += len(buffer)
-
-                batches[key] = []
-
-        queue.task_done()
-
-    for (topic, _symbol), buffer in batches.items():
-        if not buffer:
-            continue
-
-        writer.write(
-            topic,
-            buffer,
-        )
-
-        metrics.written += len(buffer)
 
 
 async def run_benchmark(
@@ -620,7 +516,7 @@ def parse_args():
     parser.add_argument(
         "--batch-size",
         type=int,
-        default=1000,
+        default=10_000,
     )
 
     parser.add_argument(

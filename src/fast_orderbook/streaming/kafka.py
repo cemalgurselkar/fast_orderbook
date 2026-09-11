@@ -1,3 +1,5 @@
+"""Routes normalized market events through independent Kafka consumer groups."""
+
 import asyncio
 from dataclasses import asdict
 
@@ -53,7 +55,7 @@ class KafkaMarketConsumer:
     def __init__(
         self,
         bootstrap_servers: str = "localhost:9092",
-        group_id: str = "fast-orderbook-bronze",
+        group_id: str = "marketstream-bronze-writer",
         consume_batch_size: int = 5_000,
     ) -> None:
         self.consume_batch_size = consume_batch_size

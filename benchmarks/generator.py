@@ -4,7 +4,6 @@ import time
 import orjson
 from confluent_kafka import Producer
 
-
 SYMBOLS = (
     "BTCUSDT",
     "ETHUSDT",

@@ -1,5 +1,9 @@
+import os
 from pathlib import Path
-import duckdb, psycopg, os
+
+import duckdb
+import psycopg
+
 
 class PostgresGoldWriter:
     def __init__(
@@ -74,9 +78,8 @@ class PostgresGoldWriter:
             vwap = EXCLUDED.vwap;
         """
 
-        with psycopg.connect(self.dsn) as connection:
-            with connection.cursor() as cursor:
-                cursor.executemany(query, rows)
+        with psycopg.connect(self.dsn) as connection, connection.cursor() as cursor:
+            cursor.executemany(query, rows)
 
         return len(rows)
 

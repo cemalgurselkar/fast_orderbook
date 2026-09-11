@@ -2,7 +2,6 @@ from pathlib import Path
 
 import duckdb
 
-
 GOLD_PATH = Path(
     "data/gold/market_summary_1m.parquet"
 )
