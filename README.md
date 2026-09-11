@@ -1,19 +1,5 @@
 # MarketStream
 
-MarketStream is an async Python package and data platform for streaming normalized Binance market
-events. The full platform sends events through Kafka, stores Bronze/Silver/Gold datasets, and
-serves live and aggregated data through FastAPI and Streamlit.
-
-```text
-Binance -> Kafka -> Bronze -> PySpark -> Silver -> DuckDB -> Gold -> PostgreSQL
-             |                                                   |
-             `----------------> FastAPI <------------------------'
-                                      |
-                                  Streamlit
-```
-
-## Install the Python package
-
 ```bash
 pip install marketstream
 ```
