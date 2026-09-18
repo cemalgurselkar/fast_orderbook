@@ -55,3 +55,5 @@ ruff check .
 ```
 
 Architecture notes are available in [`project_architecture`](project_architecture/README.md).
+
+:)
